@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vault of Codes - Certificate Verifier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #007bff;
+      --primary-dark: #0056b3;
+      --bg: #f4f6f8;
+      --text: #2c3e50;
+      --card-bg: #fff;
+      --success: #2ecc71;
+      --error: #e74c3c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .container {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: var(--primary);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .card {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card img {
+      width: 100px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .assignment-status span {
+      margin-right: 0.6rem;
+      font-weight: bold;
+    }
+
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 16px;
+      position: fixed;
+      z-index: 999;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.5s, bottom 0.5s;
+    }
+
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 50px;
+    }
+
+    .certificate-preview, .photo-preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .certificate-preview img,
+    .photo-preview img {
+      width: 100%;
+      max-width: 500px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="VOC.png" alt="Vault of Codes Logo">
+    <h1>Vault of Codes</h1>
+  </header>
+
+  <div class="photo-preview">
+    <h3>Sample Profile</h3>
+    <img src="pp.jpg" alt="PROFILE PICTURE">
+  </div>
+
+  <div class="certificate-preview">
+    <h3>Sample Certificate</h3>
+    <img src="Screenshot (228).png" alt="VERIFIED CERTIFICATE">
+  </div>
+
+  <div class="container">
+    <input type="text" id="identifier" placeholder="Enter Email or ID">
+    <button onclick="verifyStudent()">Verify Certificate</button>
+    <div class="spinner" id="spinner"></div>
+    <div id="result"></div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const dummyData = {
+      "john@example.com": {
+        name: "John Doe",
+        email: "john@example.com",
+        mobile: "9876543210",
+        domain: "Web Development",
+        college: "Dummy University",
+        start: "01 June 2024",
+        duration: "1 Month",
+        assignments: [true, false, true, true],
+        certificate: "path/to/certificate.pdf" // Add a certificate link
+      }
+    };
+
+    function verifyStudent() {
+      const id = document.getElementById('identifier').value.trim().toLowerCase();
+      const resultBox = document.getElementById('result');
+      const spinner = document.getElementById('spinner');
+      resultBox.innerHTML = '';
+
+      if (!id) return showToast("❌ Please enter a valid Email or ID");
+
+      spinner.style.display = 'block';
+
+      setTimeout(() => {
+        const student = dummyData[id];
+        spinner.style.display = 'none';
+
+        if (!student) {
+          resultBox.innerHTML = '<p style="color: var(--error);">Student not found.</p>';
+          return showToast("❌ No record found");
+        }
+
+        const html = `
+          <div class="card">
+            <img src="pp.jpg" alt="Photo"> <!-- Corrected image source -->
+            <h3>${student.name}</h3>
+            <p><strong>Email:</strong> ${student.email}</p>
+            <p><strong>Mobile:</strong> ${student.mobile}</p>
+            <p><strong>Domain:</strong> ${student.domain}</p>
+            <p><strong>College:</strong> ${student.college}</p>
+            <p><strong>Start Date:</strong> ${student.start}</p>
+            <p><strong>Duration:</strong> ${student.duration}</p>
+            <h4>Assignment Status:</h4>
+            <div class="assignment-status">
+              ${student.assignments.map((done, i) => `<span>A${i + 1}: ${done ? '✅' : '❌'}</span>`).join('')}
+            </div>
+            <p><strong>Status:</strong> Completed</p>
+            <a href="#" onclick="showCertificate('${student.certificate}')">View Certificate</a>
+            <div class="certificate-preview">
+              <img src="Screenshot (228).png" alt="Generated Certificate"> <!-- Corrected image source -->
+            </div>
+          </div>
+        `;
+
+        resultBox.innerHTML = html;
+        showToast("✅ Certificate found!");
+      }, 1000);
+    }
+
+    function showCertificate(certUrl) {
+      window.open(certUrl, '_blank');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.className = 'toast show';
+      setTimeout(() => toast.className = 'toast', 3000);
+    }
+  </script>
+</body>
+</html>
