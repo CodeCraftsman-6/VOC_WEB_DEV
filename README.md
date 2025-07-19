@@ -1,4 +1,4 @@
-# Vault of Code - Practice Web Development Internship (NC Batch)
+# Vault of Code - Practice Web Development Internship [NC(no_cost) Batch]
 
 This project was created during the **Vault of Code Practice Internship (No-Cost Batch)** for skill-building and learning real-world web development.
 
@@ -12,9 +12,14 @@ This project was created during the **Vault of Code Practice Internship (No-Cost
 
 - Responsive landing page
 - Form validation
-- Navigation bar (add as per your project)
+- Navigation bar
 
 ## 📌 Acknowledgment
 
-This is a practice project under the **Vault of Code Internship Program (NC Batch)**.  
-The base structure or guidance was provided by the mentors. This code was written by me for learning purposes.
+This project was developed as part of a **practice-based learning task** under the **Vault of Code Web Development NC Batch**.  
+No direct mentorship or guidance was provided—only task outlines were given.  
+All design, logic, and implementation decisions were made independently as part of a self-learning process.
+
+> ⚠️ Note: This was not a formal internship with structured mentorship. It was a practice assignment under the Vault of Code NC (No-Cost) initiative.
+
+
